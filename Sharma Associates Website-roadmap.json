@@ -78,9 +78,9 @@
       "name": "Inception",
       "colour_tag": "inception",
       "one_line_mission": "Get clarity on what is being built before any code exists",
-      "status": "PENDING",
-      "completed_date": null,
-      "notes": "Spec approved 2026-10-14; awaiting PHASE DONE signal",
+      "status": "DONE",
+      "completed_date": "2026-10-14",
+      "notes": "Spec approved and review fixes applied",
       "done_criterion": "The design spec is approved by the user, the project CLAUDE.md exists, and this roadmap converts to JSON with exit code 0",
       "tasks": [
         {
@@ -90,7 +90,7 @@
           "context_skills": [],
           "sub_op_plugins": [],
           "one_line_treatment": "Name, problem, user, core loop, V1 features and success metric captured in conversation",
-          "done": false,
+          "done": true,
           "sub_steps": []
         },
         {
@@ -100,7 +100,7 @@
           "context_skills": [],
           "sub_op_plugins": [],
           "one_line_treatment": "Spec lives at docs/superpowers/specs/2026-10-14-sharma-associates-website-design.md",
-          "done": false,
+          "done": true,
           "sub_steps": []
         },
         {
@@ -110,7 +110,7 @@
           "context_skills": [],
           "sub_op_plugins": [],
           "one_line_treatment": "Short file covering what, stack and constraints",
-          "done": false,
+          "done": true,
           "sub_steps": []
         },
         {
@@ -120,16 +120,16 @@
           "context_skills": [],
           "sub_op_plugins": [],
           "one_line_treatment": "Run the converter until it exits 0",
-          "done": false,
+          "done": true,
           "sub_steps": []
         }
       ],
       "phase_gate": {
-        "tasks_complete": false,
-        "done_criterion_met": false,
-        "code_review_passed": false,
-        "commit_done": false,
-        "confirmed_at": null
+        "tasks_complete": true,
+        "done_criterion_met": true,
+        "code_review_passed": true,
+        "commit_done": true,
+        "confirmed_at": "2026-10-14T00:00:00Z"
       }
     },
     {

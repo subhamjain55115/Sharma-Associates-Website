@@ -4,7 +4,7 @@
 
 | Phase | Status | Completed | Notes |
 |---|---|---|---|
-| Phase -1 Inception | IN PROGRESS | — | Spec approved 2026-10-14; awaiting PHASE DONE signal |
+| Phase -1 Inception | DONE | 2026-10-14 | Spec approved and review fixes applied |
 | Phase 1 Setup | PENDING | — | — |
 | Phase 2 Core Build | PENDING | — | — |
 | Phase 3 Quality Pass | PENDING | — | — |
