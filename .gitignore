@@ -6,3 +6,9 @@
 node_modules/
 .next/
 ProductAnalyser-roadmap.json
+.vercel
+coverage/
+playwright-report/
+test-results/
+*.tsbuildinfo
+next-env.d.ts

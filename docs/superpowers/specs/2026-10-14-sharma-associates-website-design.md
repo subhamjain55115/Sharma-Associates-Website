@@ -2,7 +2,7 @@
 
 Date: 2026-10-14
 Track: SDLC Lite
-Status: Draft, awaiting user review
+Status: Approved 2026-10-14 (amended 2026-10-14 after review: Upstash rate limiting, relaxed Phase 2 email criterion)
 
 ## Purpose
 
@@ -40,6 +40,7 @@ A public marketing website for Sharma & Associates, a Chartered Accountancy firm
 | Styling | Tailwind CSS | Fast mobile-first, consistent design tokens |
 | Email | Resend | Simple transactional email API, no SMTP management |
 | Validation | Zod | Schema validation at the server boundary |
+| Rate limiting | Upstash Redis via Vercel Marketplace | In-memory counters do not work across serverless instances; used for rate limiting only, no application data |
 | Hosting | Vercel | Zero-config deploys for Next.js |
 | Tests | Vitest, Playwright | Unit tests for logic, one E2E for the booking flow |
 
@@ -54,16 +55,17 @@ A public marketing website for Sharma & Associates, a Chartered Accountancy firm
 
 1. Form fields: name, phone, email, service, preferred date and time, short message.
 2. A server action validates input with Zod. Invalid input is rejected with field-level errors.
-3. Abuse protection: honeypot field and per-IP rate limiting.
+3. Abuse protection: honeypot field and per-IP rate limiting backed by Upstash Redis.
 4. On success, send two emails via Resend: one to the firm with the request details, one confirmation to the visitor.
-5. The firm confirms the slot by replying to the visitor. No calendar integration in V1.
-6. UI states: idle, submitting, success, error. Errors use clear, actionable messages and never expose internals.
+5. The visitor confirmation email can only be sent once the Resend sender domain is verified. Until then, only the firm email is tested; the visitor email is verified in Phase 4.
+6. The firm confirms the slot by replying to the visitor. No calendar integration in V1.
+7. UI states: idle, submitting, success, error. Errors use clear, actionable messages and never expose internals.
 
 ## Non-negotiable rules
 
 - Secrets (Resend API key, firm email address) live only in environment variables, never in source or the client bundle.
 - Mobile-first layout, WCAG 2.2 AA, semantic HTML, visible focus states, 44px minimum touch targets.
-- SEO basics: per-page metadata, sitemap, robots, LocalBusiness structured data for the Mumbai office.
+- SEO basics: per-page metadata, sitemap, robots, AccountingService structured data for the Mumbai office.
 - All form input is validated on the server regardless of client-side checks.
 
 ## Out of scope for V1
@@ -72,6 +74,7 @@ A public marketing website for Sharma & Associates, a Chartered Accountancy firm
 - Blog or CMS
 - Payments
 - Live calendar slot booking (candidate for V2: Cal.com embed)
+- Any application database (Upstash Redis is used only for rate limiting)
 - Multi-language support
 
 ## Testing

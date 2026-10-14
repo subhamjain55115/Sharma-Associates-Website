@@ -27,6 +27,11 @@
         "why": "Schema validation at the server boundary"
       },
       {
+        "layer": "Rate limiting",
+        "choice": "Upstash Redis via Vercel Marketplace",
+        "why": "In-memory counters do not work across serverless instances"
+      },
+      {
         "layer": "Hosting",
         "choice": "Vercel",
         "why": "Zero-config deploys for Next.js"
@@ -37,7 +42,7 @@
         "why": "Unit tests for logic and one E2E test for the booking flow"
       }
     ],
-    "architecture_overview": "Next.js App Router site on Vercel. The consultation form submits to a server action that validates input with Zod, applies honeypot and per-IP rate limiting, then sends one email to the firm and one confirmation to the visitor through Resend. No database.",
+    "architecture_overview": "Next.js App Router site on Vercel. The consultation form submits to a server action that validates input with Zod, applies honeypot and per-IP rate limiting backed by Upstash Redis, then sends one email to the firm and one confirmation to the visitor through Resend. No application database.",
     "success_metric_v1": "Deployed on a real domain, a test booking reaches the firm's inbox, and Lighthouse scores 90 or higher on mobile"
   },
   "brainstorm": {
@@ -57,13 +62,13 @@
       "About page covering the firm and team",
       "Contact and book page with the consultation form, address, phone and WhatsApp link",
       "Server-side validated booking action that emails the firm and confirms to the visitor",
-      "SEO basics: per-page metadata, sitemap, robots and LocalBusiness structured data"
+      "SEO basics: per-page metadata, sitemap, robots and AccountingService structured data"
     ],
     "key_constraints": [
       "Secrets such as the Resend API key and the firm email address live only in environment variables",
       "All form input is validated on the server regardless of client checks",
       "Mobile-first layout that meets WCAG 2.2 AA",
-      "No database and no authentication in V1",
+      "No application database and no authentication in V1; Upstash Redis is used only for rate limiting",
       "Content is placeholder until the firm supplies real logo, team, address and contact details"
     ]
   },
@@ -75,7 +80,7 @@
       "one_line_mission": "Get clarity on what is being built before any code exists",
       "status": "PENDING",
       "completed_date": null,
-      "notes": "Spec written, awaiting user approval; roadmap pending converter run",
+      "notes": "Spec approved 2026-10-14; awaiting PHASE DONE signal",
       "done_criterion": "The design spec is approved by the user, the project CLAUDE.md exists, and this roadmap converts to JSON with exit code 0",
       "tasks": [
         {
@@ -211,7 +216,7 @@
       "status": "PENDING",
       "completed_date": null,
       "notes": "",
-      "done_criterion": "A booking submitted through the real form on the running site sends both emails and shows the success state",
+      "done_criterion": "A booking submitted through the real form on the running site sends the firm email and shows the success state",
       "tasks": [
         {
           "id": 1,
@@ -237,7 +242,7 @@
             "security-hardening"
           ],
           "sub_op_plugins": [],
-          "one_line_treatment": "Honeypot, per-IP rate limiting, two emails, structured error results",
+          "one_line_treatment": "Honeypot, Upstash per-IP rate limiting, two emails, structured error results; visitor email works once the sender domain is verified in Phase 4",
           "done": false,
           "sub_steps": [
             {
@@ -248,14 +253,14 @@
             },
             {
               "id": "2b",
-              "description": "Add honeypot and rate limiting",
+              "description": "Add honeypot and Upstash rate limiting",
               "expected_output": "Bot and repeat submissions are rejected",
               "done": false
             },
             {
               "id": "2c",
               "description": "Send firm and visitor emails",
-              "expected_output": "Both emails arrive in a test inbox",
+              "expected_output": "Firm email arrives in a test inbox; visitor email is verified in Phase 4",
               "done": false
             }
           ]
@@ -311,7 +316,7 @@
             "nextjs-mastery"
           ],
           "sub_op_plugins": [],
-          "one_line_treatment": "One metadata block per page and JSON-LD for the Mumbai office",
+          "one_line_treatment": "One metadata block per page and AccountingService JSON-LD for the Mumbai office",
           "done": false,
           "sub_steps": []
         }
@@ -536,6 +541,24 @@
       "date": "2026-10-14",
       "decision": "Resend for transactional email",
       "reason": "Simple API and good fit with Vercel, no SMTP to manage",
+      "phase": "Phase -1"
+    },
+    {
+      "date": "2026-10-14",
+      "decision": "Upstash Redis for rate limiting",
+      "reason": "In-memory counters do not work across serverless instances; no application data stored",
+      "phase": "Phase -1"
+    },
+    {
+      "date": "2026-10-14",
+      "decision": "Phase 2 done criterion relaxed to firm email only",
+      "reason": "Resend sends to arbitrary visitors only from a verified domain, which happens in Phase 4",
+      "phase": "Phase -1"
+    },
+    {
+      "date": "2026-10-14",
+      "decision": "AccountingService schema type instead of LocalBusiness",
+      "reason": "More specific for a CA firm",
       "phase": "Phase -1"
     }
   ]

@@ -19,7 +19,7 @@
 | Tagline | A trustworthy, modern CA firm for growing businesses in Mumbai |
 | Core Principle | Secrets live only in environment variables and all form input is validated on the server |
 | V1 Scope Boundary | Inside V1: four service pages, about page, and a consultation form that emails the firm. Deferred: client portal, login, blog or CMS, payments, live calendar slots, multi-language |
-| Architecture Overview | Next.js App Router site on Vercel. The consultation form submits to a server action that validates input with Zod, applies honeypot and per-IP rate limiting, then sends one email to the firm and one confirmation to the visitor through Resend. No database. |
+| Architecture Overview | Next.js App Router site on Vercel. The consultation form submits to a server action that validates input with Zod, applies honeypot and per-IP rate limiting backed by Upstash Redis, then sends one email to the firm and one confirmation to the visitor through Resend. No application database. |
 | Success Metric V1 | Deployed on a real domain, a test booking reaches the firm's inbox, and Lighthouse scores 90 or higher on mobile |
 
 ## Tech Stack
@@ -30,6 +30,7 @@
 | Styling | Tailwind CSS | Fast mobile-first styling with consistent design tokens |
 | Email | Resend | Simple transactional email API with no SMTP to manage |
 | Validation | Zod | Schema validation at the server boundary |
+| Rate limiting | Upstash Redis via Vercel Marketplace | In-memory counters do not work across serverless instances |
 | Hosting | Vercel | Zero-config deploys for Next.js |
 | Tests | Vitest and Playwright | Unit tests for logic and one E2E test for the booking flow |
 
@@ -54,13 +55,13 @@
 - About page covering the firm and team
 - Contact and book page with the consultation form, address, phone and WhatsApp link
 - Server-side validated booking action that emails the firm and confirms to the visitor
-- SEO basics: per-page metadata, sitemap, robots and LocalBusiness structured data
+- SEO basics: per-page metadata, sitemap, robots and AccountingService structured data
 
 ### Key Constraints
 - Secrets such as the Resend API key and the firm email address live only in environment variables
 - All form input is validated on the server regardless of client checks
 - Mobile-first layout that meets WCAG 2.2 AA
-- No database and no authentication in V1
+- No application database and no authentication in V1; Upstash Redis is used only for rate limiting
 - Content is placeholder until the firm supplies real logo, team, address and contact details
 
 ## Phases
@@ -89,24 +90,24 @@
 
 ### Phase 2 — Core Build [frontend]
 **Mission:** Build the booking logic first, then the pages that use it, in dependency order
-**Done when:** A booking submitted through the real form on the running site sends both emails and shows the success state
+**Done when:** A booking submitted through the real form on the running site sends the firm email and shows the success state
 
 | # | Task | CE Driver | Context Skills | Sub-op Plugins | Treatment |
 |---|---|---|---|---|---|
 | 1 | Define the booking Zod schema and unit tests | /ce-work | tdd-mastery, typescript-advanced | /test-writer:unit-test | Tests written alongside the schema covering valid, invalid and edge inputs |
-| 2 | Build the booking server action with Resend | /ce-work | nextjs-mastery, security-hardening | — | Honeypot, per-IP rate limiting, two emails, structured error results |
+| 2 | Build the booking server action with Resend | /ce-work | nextjs-mastery, security-hardening | — | Honeypot, Upstash per-IP rate limiting, two emails, structured error results; visitor email works once the sender domain is verified in Phase 4 |
 | 3 | Build shared layout, navigation and design tokens | /ce-work | nextjs-mastery, styleseed | /frontend-developer:create-component | Mobile-first, semantic landmarks, 44px touch targets |
 | 4 | Build Home and Services pages | /ce-work | frontend-excellence | /web-dev:add-page | Placeholder content marked clearly until the firm supplies real copy |
 | 5 | Build About and Contact and Book pages | /ce-work | accessibility-wcag | /frontend-developer:create-component | Booking form wired to the server action with idle, submitting, success and error states |
-| 6 | Add SEO metadata, sitemap, robots and LocalBusiness schema | /ce-work | nextjs-mastery | — | One metadata block per page and JSON-LD for the Mumbai office |
+| 6 | Add SEO metadata, sitemap, robots and LocalBusiness schema | /ce-work | nextjs-mastery | — | One metadata block per page and AccountingService JSON-LD for the Mumbai office |
 
 #### Sub-steps
 
 | Task | ID | Sub-step | Expected Output |
 |---|---|---|---|
 | 2 | 2a | Validate input with the Zod schema | Invalid input returns field-level errors |
-| 2 | 2b | Add honeypot and rate limiting | Bot and repeat submissions are rejected |
-| 2 | 2c | Send firm and visitor emails | Both emails arrive in a test inbox |
+| 2 | 2b | Add honeypot and Upstash rate limiting | Bot and repeat submissions are rejected |
+| 2 | 2c | Send firm and visitor emails | Firm email arrives in a test inbox; visitor email is verified in Phase 4 |
 
 ### Phase 3 — Quality Pass [testing]
 **Mission:** Verify the core logic, accessibility, security basics and performance before shipping
@@ -149,6 +150,9 @@
 | 2026-10-14 | Chose SDLC Lite track | Small marketing site with one integration and fewer than fifteen tasks | Phase -1 |
 | 2026-10-14 | Booking via form and email instead of a calendar embed or custom system | Simplest option that proves the core loop, calendar embed deferred to V2 | Phase -1 |
 | 2026-10-14 | Resend for transactional email | Simple API and good fit with Vercel, no SMTP to manage | Phase -1 |
+| 2026-10-14 | Upstash Redis for rate limiting | In-memory counters do not work across serverless instances; no application data stored | Phase -1 |
+| 2026-10-14 | Phase 2 done criterion relaxed to firm email only | Resend sends to arbitrary visitors only from a verified domain, which happens in Phase 4 | Phase -1 |
+| 2026-10-14 | AccountingService schema type instead of LocalBusiness | More specific for a CA firm | Phase -1 |
 
 ## Phase Gate Checklist
 
