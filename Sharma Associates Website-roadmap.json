@@ -1,0 +1,542 @@
+{
+  "project": {
+    "name": "Sharma Associates Website",
+    "description": "Public marketing website for Sharma & Associates, a Chartered Accountancy firm in Mumbai, built to convert visitors into consultation bookings",
+    "tagline": "A trustworthy, modern CA firm for growing businesses in Mumbai",
+    "core_principle": "Secrets live only in environment variables and all form input is validated on the server",
+    "v1_scope_boundary": "Inside V1: four service pages, about page, and a consultation form that emails the firm. Deferred: client portal, login, blog or CMS, payments, live calendar slots, multi-language",
+    "tech_stack": [
+      {
+        "layer": "Framework",
+        "choice": "Next.js App Router with TypeScript",
+        "why": "SSG and SSR for SEO, server actions for the form, native Vercel fit"
+      },
+      {
+        "layer": "Styling",
+        "choice": "Tailwind CSS",
+        "why": "Fast mobile-first styling with consistent design tokens"
+      },
+      {
+        "layer": "Email",
+        "choice": "Resend",
+        "why": "Simple transactional email API with no SMTP to manage"
+      },
+      {
+        "layer": "Validation",
+        "choice": "Zod",
+        "why": "Schema validation at the server boundary"
+      },
+      {
+        "layer": "Hosting",
+        "choice": "Vercel",
+        "why": "Zero-config deploys for Next.js"
+      },
+      {
+        "layer": "Tests",
+        "choice": "Vitest and Playwright",
+        "why": "Unit tests for logic and one E2E test for the booking flow"
+      }
+    ],
+    "architecture_overview": "Next.js App Router site on Vercel. The consultation form submits to a server action that validates input with Zod, applies honeypot and per-IP rate limiting, then sends one email to the firm and one confirmation to the visitor through Resend. No database.",
+    "success_metric_v1": "Deployed on a real domain, a test booking reaches the firm's inbox, and Lighthouse scores 90 or higher on mobile"
+  },
+  "brainstorm": {
+    "problem": "Sharma & Associates has no public web presence that convinces small business owners to trust the firm and book a consultation",
+    "pain_intensity": "Lite — not explored",
+    "evidence": "Lite — not explored",
+    "user": "A small business owner or startup founder in Mumbai, browsing on a phone, looking for GST, accounting, audit or company setup help",
+    "current_alternative": "Lite — not explored",
+    "insight": "Lite — not explored",
+    "core_loop": "Visitor lands on the site, reads the services, submits the consultation form, and the firm receives the request and confirms by reply",
+    "what_this_is_not": "Not a client portal, no login, no blog or CMS, no payments, no live calendar booking, not multi-language"
+  },
+  "plan": {
+    "key_features_v1": [
+      "Home page with a hero, a book-a-consultation call to action, services summary, why-us and placeholder testimonials",
+      "Services pages for tax and ITR, GST and compliance, audit and assurance, and accounting and business setup",
+      "About page covering the firm and team",
+      "Contact and book page with the consultation form, address, phone and WhatsApp link",
+      "Server-side validated booking action that emails the firm and confirms to the visitor",
+      "SEO basics: per-page metadata, sitemap, robots and LocalBusiness structured data"
+    ],
+    "key_constraints": [
+      "Secrets such as the Resend API key and the firm email address live only in environment variables",
+      "All form input is validated on the server regardless of client checks",
+      "Mobile-first layout that meets WCAG 2.2 AA",
+      "No database and no authentication in V1",
+      "Content is placeholder until the firm supplies real logo, team, address and contact details"
+    ]
+  },
+  "phases": [
+    {
+      "number": -1,
+      "name": "Inception",
+      "colour_tag": "inception",
+      "one_line_mission": "Get clarity on what is being built before any code exists",
+      "status": "PENDING",
+      "completed_date": null,
+      "notes": "Spec written, awaiting user approval; roadmap pending converter run",
+      "done_criterion": "The design spec is approved by the user, the project CLAUDE.md exists, and this roadmap converts to JSON with exit code 0",
+      "tasks": [
+        {
+          "id": 1,
+          "description": "Answer the six Lite brainstorm questions",
+          "ce_driver": "/ce-brainstorm",
+          "context_skills": [],
+          "sub_op_plugins": [],
+          "one_line_treatment": "Name, problem, user, core loop, V1 features and success metric captured in conversation",
+          "done": false,
+          "sub_steps": []
+        },
+        {
+          "id": 2,
+          "description": "Write and approve the design spec",
+          "ce_driver": "/ce-plan",
+          "context_skills": [],
+          "sub_op_plugins": [],
+          "one_line_treatment": "Spec lives at docs/superpowers/specs/2026-10-14-sharma-associates-website-design.md",
+          "done": false,
+          "sub_steps": []
+        },
+        {
+          "id": 3,
+          "description": "Write the project CLAUDE.md",
+          "ce_driver": "/ce-work",
+          "context_skills": [],
+          "sub_op_plugins": [],
+          "one_line_treatment": "Short file covering what, stack and constraints",
+          "done": false,
+          "sub_steps": []
+        },
+        {
+          "id": 4,
+          "description": "Write this roadmap and convert it to JSON",
+          "ce_driver": "/ce-work",
+          "context_skills": [],
+          "sub_op_plugins": [],
+          "one_line_treatment": "Run the converter until it exits 0",
+          "done": false,
+          "sub_steps": []
+        }
+      ],
+      "phase_gate": {
+        "tasks_complete": false,
+        "done_criterion_met": false,
+        "code_review_passed": false,
+        "commit_done": false,
+        "confirmed_at": null
+      }
+    },
+    {
+      "number": 1,
+      "name": "Setup",
+      "colour_tag": "devops",
+      "one_line_mission": "Anyone can clone the repo and see the site running in under ten minutes",
+      "status": "PENDING",
+      "completed_date": null,
+      "notes": "",
+      "done_criterion": "A fresh clone with a filled-in .env runs with npm run dev and renders the home page, and npm audit reports no critical or high findings",
+      "tasks": [
+        {
+          "id": 1,
+          "description": "Scaffold the Next.js TypeScript Tailwind project",
+          "ce_driver": "/ce-work",
+          "context_skills": [
+            "nextjs-mastery",
+            "typescript-advanced"
+          ],
+          "sub_op_plugins": [
+            "/project-scaffold:scaffold"
+          ],
+          "one_line_treatment": "Use non-interactive create-next-app and keep the default App Router layout",
+          "done": false,
+          "sub_steps": []
+        },
+        {
+          "id": 2,
+          "description": "Run npm audit right after scaffolding",
+          "ce_driver": "/ce-work",
+          "context_skills": [
+            "security-hardening"
+          ],
+          "sub_op_plugins": [
+            "/dependency-manager:audit-deps"
+          ],
+          "one_line_treatment": "Lessons.md 4: fix critical and high findings before any feature work",
+          "done": false,
+          "sub_steps": []
+        },
+        {
+          "id": 3,
+          "description": "Create .env.example and gitignore secrets",
+          "ce_driver": "/ce-work",
+          "context_skills": [
+            "security-hardening"
+          ],
+          "sub_op_plugins": [
+            "/env-manager:env-setup"
+          ],
+          "one_line_treatment": "Only keys the current code consumes are required, per lessons.md 11",
+          "done": false,
+          "sub_steps": []
+        },
+        {
+          "id": 4,
+          "description": "Initialise git with a branch strategy",
+          "ce_driver": "/ce-work",
+          "context_skills": [
+            "git-advanced"
+          ],
+          "sub_op_plugins": [
+            "/git-flow:flow-start"
+          ],
+          "one_line_treatment": "Check git status for stray files before staging, per lessons.md 1",
+          "done": false,
+          "sub_steps": []
+        }
+      ],
+      "phase_gate": {
+        "tasks_complete": false,
+        "done_criterion_met": false,
+        "code_review_passed": false,
+        "commit_done": false,
+        "confirmed_at": null
+      }
+    },
+    {
+      "number": 2,
+      "name": "Core Build",
+      "colour_tag": "frontend",
+      "one_line_mission": "Build the booking logic first, then the pages that use it, in dependency order",
+      "status": "PENDING",
+      "completed_date": null,
+      "notes": "",
+      "done_criterion": "A booking submitted through the real form on the running site sends both emails and shows the success state",
+      "tasks": [
+        {
+          "id": 1,
+          "description": "Define the booking Zod schema and unit tests",
+          "ce_driver": "/ce-work",
+          "context_skills": [
+            "tdd-mastery",
+            "typescript-advanced"
+          ],
+          "sub_op_plugins": [
+            "/test-writer:unit-test"
+          ],
+          "one_line_treatment": "Tests written alongside the schema covering valid, invalid and edge inputs",
+          "done": false,
+          "sub_steps": []
+        },
+        {
+          "id": 2,
+          "description": "Build the booking server action with Resend",
+          "ce_driver": "/ce-work",
+          "context_skills": [
+            "nextjs-mastery",
+            "security-hardening"
+          ],
+          "sub_op_plugins": [],
+          "one_line_treatment": "Honeypot, per-IP rate limiting, two emails, structured error results",
+          "done": false,
+          "sub_steps": [
+            {
+              "id": "2a",
+              "description": "Validate input with the Zod schema",
+              "expected_output": "Invalid input returns field-level errors",
+              "done": false
+            },
+            {
+              "id": "2b",
+              "description": "Add honeypot and rate limiting",
+              "expected_output": "Bot and repeat submissions are rejected",
+              "done": false
+            },
+            {
+              "id": "2c",
+              "description": "Send firm and visitor emails",
+              "expected_output": "Both emails arrive in a test inbox",
+              "done": false
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "description": "Build shared layout, navigation and design tokens",
+          "ce_driver": "/ce-work",
+          "context_skills": [
+            "nextjs-mastery",
+            "styleseed"
+          ],
+          "sub_op_plugins": [
+            "/frontend-developer:create-component"
+          ],
+          "one_line_treatment": "Mobile-first, semantic landmarks, 44px touch targets",
+          "done": false,
+          "sub_steps": []
+        },
+        {
+          "id": 4,
+          "description": "Build Home and Services pages",
+          "ce_driver": "/ce-work",
+          "context_skills": [
+            "frontend-excellence"
+          ],
+          "sub_op_plugins": [
+            "/web-dev:add-page"
+          ],
+          "one_line_treatment": "Placeholder content marked clearly until the firm supplies real copy",
+          "done": false,
+          "sub_steps": []
+        },
+        {
+          "id": 5,
+          "description": "Build About and Contact and Book pages",
+          "ce_driver": "/ce-work",
+          "context_skills": [
+            "accessibility-wcag"
+          ],
+          "sub_op_plugins": [
+            "/frontend-developer:create-component"
+          ],
+          "one_line_treatment": "Booking form wired to the server action with idle, submitting, success and error states",
+          "done": false,
+          "sub_steps": []
+        },
+        {
+          "id": 6,
+          "description": "Add SEO metadata, sitemap, robots and LocalBusiness schema",
+          "ce_driver": "/ce-work",
+          "context_skills": [
+            "nextjs-mastery"
+          ],
+          "sub_op_plugins": [],
+          "one_line_treatment": "One metadata block per page and JSON-LD for the Mumbai office",
+          "done": false,
+          "sub_steps": []
+        }
+      ],
+      "phase_gate": {
+        "tasks_complete": false,
+        "done_criterion_met": false,
+        "code_review_passed": false,
+        "commit_done": false,
+        "confirmed_at": null
+      }
+    },
+    {
+      "number": 3,
+      "name": "Quality Pass",
+      "colour_tag": "testing",
+      "one_line_mission": "Verify the core logic, accessibility, security basics and performance before shipping",
+      "status": "PENDING",
+      "completed_date": null,
+      "notes": "",
+      "done_criterion": "Unit and E2E tests pass, the axe scan reports no serious violations, and Lighthouse mobile scores are 90 or higher",
+      "tasks": [
+        {
+          "id": 1,
+          "description": "Write the Playwright booking flow E2E test",
+          "ce_driver": "/ce-work",
+          "context_skills": [
+            "testing-strategies"
+          ],
+          "sub_op_plugins": [
+            "/e2e-runner:run-e2e"
+          ],
+          "one_line_treatment": "Form submission through to the success state with email mocked at the boundary",
+          "done": false,
+          "sub_steps": []
+        },
+        {
+          "id": 2,
+          "description": "Run the accessibility audit and fix findings",
+          "ce_driver": "/ce-work",
+          "context_skills": [
+            "accessibility-wcag"
+          ],
+          "sub_op_plugins": [
+            "/a11y-audit:run-audit"
+          ],
+          "one_line_treatment": "Keyboard-only pass plus axe scan",
+          "done": false,
+          "sub_steps": []
+        },
+        {
+          "id": 3,
+          "description": "Security basics pass",
+          "ce_driver": "/ce-code-review",
+          "context_skills": [
+            "security-hardening"
+          ],
+          "sub_op_plugins": [
+            "/code-guardian:security-scan"
+          ],
+          "one_line_treatment": "No secrets in source, server validation confirmed, security headers set",
+          "done": false,
+          "sub_steps": []
+        },
+        {
+          "id": 4,
+          "description": "Run Lighthouse and fix performance issues",
+          "ce_driver": "/ce-optimize",
+          "context_skills": [
+            "performance-optimization"
+          ],
+          "sub_op_plugins": [
+            "/lighthouse-runner:run-audit"
+          ],
+          "one_line_treatment": "Target 90 or higher on mobile for all four categories",
+          "done": false,
+          "sub_steps": []
+        },
+        {
+          "id": 5,
+          "description": "Review the phase before committing",
+          "ce_driver": "/ce-code-review",
+          "context_skills": [],
+          "sub_op_plugins": [
+            "/double-check:verify"
+          ],
+          "one_line_treatment": "Multi-persona review with no unresolved blockers",
+          "done": false,
+          "sub_steps": []
+        }
+      ],
+      "phase_gate": {
+        "tasks_complete": false,
+        "done_criterion_met": false,
+        "code_review_passed": false,
+        "commit_done": false,
+        "confirmed_at": null
+      }
+    },
+    {
+      "number": 4,
+      "name": "Ship",
+      "colour_tag": "release",
+      "one_line_mission": "Put the site live on the firm's real domain with a working booking flow",
+      "status": "PENDING",
+      "completed_date": null,
+      "notes": "",
+      "done_criterion": "The site is live on the real domain and a test booking reaches the firm's inbox",
+      "tasks": [
+        {
+          "id": 1,
+          "description": "Deploy to Vercel with production environment variables",
+          "ce_driver": "/ce-work",
+          "context_skills": [
+            "ci-cd-pipelines",
+            "security-hardening"
+          ],
+          "sub_op_plugins": [
+            "/deploy-pilot:ci-pipeline"
+          ],
+          "one_line_treatment": "Set Resend key and firm email in Vercel, never in the repo",
+          "done": false,
+          "sub_steps": []
+        },
+        {
+          "id": 2,
+          "description": "Connect the real domain and verify the Resend sender domain",
+          "ce_driver": "/ce-work",
+          "context_skills": [],
+          "sub_op_plugins": [],
+          "one_line_treatment": "DNS records for the site and for email deliverability",
+          "done": false,
+          "sub_steps": []
+        },
+        {
+          "id": 3,
+          "description": "Run an end-to-end test booking on production",
+          "ce_driver": "/ce-work",
+          "context_skills": [],
+          "sub_op_plugins": [
+            "/double-check:verify"
+          ],
+          "one_line_treatment": "Confirm the firm inbox receives the request and the visitor receives the confirmation",
+          "done": false,
+          "sub_steps": []
+        },
+        {
+          "id": 4,
+          "description": "Write the README",
+          "ce_driver": "/ce-work",
+          "context_skills": [],
+          "sub_op_plugins": [
+            "/readme-generator:generate-readme"
+          ],
+          "one_line_treatment": "Setup, environment variables and deploy steps",
+          "done": false,
+          "sub_steps": []
+        },
+        {
+          "id": 5,
+          "description": "Run the launch checklist",
+          "ce_driver": "/ce-work",
+          "context_skills": [],
+          "sub_op_plugins": [
+            "/product-shipper:launch-checklist"
+          ],
+          "one_line_treatment": "Final gate before announcing the site",
+          "done": false,
+          "sub_steps": []
+        }
+      ],
+      "phase_gate": {
+        "tasks_complete": false,
+        "done_criterion_met": false,
+        "code_review_passed": false,
+        "commit_done": false,
+        "confirmed_at": null
+      }
+    }
+  ],
+  "v2_backlog": [
+    {
+      "date": "2026-10-14",
+      "idea": "Calendar slot booking with a Cal.com embed",
+      "why_deferred": "Form and email is enough for V1"
+    },
+    {
+      "date": "2026-10-14",
+      "idea": "Blog or CMS for articles and tax updates",
+      "why_deferred": "Not in the V1 scope"
+    },
+    {
+      "date": "2026-10-14",
+      "idea": "Client portal with login and document upload",
+      "why_deferred": "Different product with its own security scope"
+    },
+    {
+      "date": "2026-10-14",
+      "idea": "Hindi and Marathi language support",
+      "why_deferred": "English only for V1"
+    },
+    {
+      "date": "2026-10-14",
+      "idea": "Online payments for consultation fees",
+      "why_deferred": "Not needed to prove the booking flow"
+    }
+  ],
+  "decision_log": [
+    {
+      "date": "2026-10-14",
+      "decision": "Chose SDLC Lite track",
+      "reason": "Small marketing site with one integration and fewer than fifteen tasks",
+      "phase": "Phase -1"
+    },
+    {
+      "date": "2026-10-14",
+      "decision": "Booking via form and email instead of a calendar embed or custom system",
+      "reason": "Simplest option that proves the core loop, calendar embed deferred to V2",
+      "phase": "Phase -1"
+    },
+    {
+      "date": "2026-10-14",
+      "decision": "Resend for transactional email",
+      "reason": "Simple API and good fit with Vercel, no SMTP to manage",
+      "phase": "Phase -1"
+    }
+  ]
+}
