@@ -20,7 +20,7 @@ Public marketing website for Sharma & Associates, a Chartered Accountancy firm i
 - Validate all form input on the server with Zod. Honeypot and rate limiting on the booking action.
 - Mobile-first, WCAG 2.2 AA.
 - No application database, no auth, no payments, no CMS in V1. Upstash Redis is for rate limiting only. Ideas go to `docs/v2-backlog.md`.
-- Run `npm audit` right after scaffolding.
+- Run `npm audit --omit=dev` each phase. Dev-only `braces` findings are accepted (no patch exists); see decision log.
 
 ## Where to look
 

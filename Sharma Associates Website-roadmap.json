@@ -140,7 +140,7 @@
       "status": "PENDING",
       "completed_date": null,
       "notes": "",
-      "done_criterion": "A fresh clone with a filled-in .env runs with npm run dev and renders the home page, and npm audit reports no critical or high findings",
+      "done_criterion": "A fresh clone with a filled-in .env runs with npm run dev and renders the home page, and npm audit --omit=dev reports no critical or high findings",
       "tasks": [
         {
           "id": 1,
@@ -167,7 +167,7 @@
           "sub_op_plugins": [
             "/dependency-manager:audit-deps"
           ],
-          "one_line_treatment": "Lessons.md 4: fix critical and high findings before any feature work",
+          "one_line_treatment": "Lessons.md 4: fix critical and high findings before any feature work; dev-only braces findings accepted, see Decision Log",
           "done": false,
           "sub_steps": []
         },
@@ -560,6 +560,12 @@
       "decision": "AccountingService schema type instead of LocalBusiness",
       "reason": "More specific for a CA firm",
       "phase": "Phase -1"
+    },
+    {
+      "date": "2026-10-14",
+      "decision": "Accept dev-only braces audit findings and gate on npm audit --omit=dev",
+      "reason": "No patched braces exists (advisory covers all versions through 3.0.3); chain is eslint-config-next lint tooling only, production audit is clean",
+      "phase": "Phase 1"
     }
   ]
 }

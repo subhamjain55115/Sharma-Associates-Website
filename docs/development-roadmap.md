@@ -79,12 +79,12 @@
 
 ### Phase 1 — Setup [devops]
 **Mission:** Anyone can clone the repo and see the site running in under ten minutes
-**Done when:** A fresh clone with a filled-in .env runs with npm run dev and renders the home page, and npm audit reports no critical or high findings
+**Done when:** A fresh clone with a filled-in .env runs with npm run dev and renders the home page, and npm audit --omit=dev reports no critical or high findings
 
 | # | Task | CE Driver | Context Skills | Sub-op Plugins | Treatment |
 |---|---|---|---|---|---|
 | 1 | Scaffold the Next.js TypeScript Tailwind project | /ce-work | nextjs-mastery, typescript-advanced | /project-scaffold:scaffold | Use non-interactive create-next-app and keep the default App Router layout |
-| 2 | Run npm audit right after scaffolding | /ce-work | security-hardening | /dependency-manager:audit-deps | Lessons.md 4: fix critical and high findings before any feature work |
+| 2 | Run npm audit right after scaffolding | /ce-work | security-hardening | /dependency-manager:audit-deps | Lessons.md 4: fix critical and high findings before any feature work; dev-only braces findings accepted, see Decision Log |
 | 3 | Create .env.example and gitignore secrets | /ce-work | security-hardening | /env-manager:env-setup | Only keys the current code consumes are required, per lessons.md 11 |
 | 4 | Initialise git with a branch strategy | /ce-work | git-advanced | /git-flow:flow-start | Check git status for stray files before staging, per lessons.md 1 |
 
@@ -153,6 +153,7 @@
 | 2026-10-14 | Upstash Redis for rate limiting | In-memory counters do not work across serverless instances; no application data stored | Phase -1 |
 | 2026-10-14 | Phase 2 done criterion relaxed to firm email only | Resend sends to arbitrary visitors only from a verified domain, which happens in Phase 4 | Phase -1 |
 | 2026-10-14 | AccountingService schema type instead of LocalBusiness | More specific for a CA firm | Phase -1 |
+| 2026-10-14 | Accept dev-only braces audit findings and gate on npm audit --omit=dev | No patched braces exists (advisory covers all versions through 3.0.3); chain is eslint-config-next lint tooling only, production audit is clean | Phase 1 |
 
 ## Phase Gate Checklist
 
